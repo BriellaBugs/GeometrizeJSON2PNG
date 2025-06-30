@@ -1,4 +1,4 @@
-﻿function love.conf(t)
+function love.conf(t)
 	t.identity = "Geometrize JSON Renderer"
 	t.version = "11.5"
 	t.window.title = "Geometrize JSON Renderer"
