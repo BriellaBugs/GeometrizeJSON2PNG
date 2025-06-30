@@ -1,6 +1,23 @@
 # GeometrizeJSON2PNG
 Geometrize JSON to PNG converter made with LÖVE2D framework
 
+# Features
+- High resolution output (Scroll to increase/decrease resolution)
+- Batch processing (Drop multiple .json files at once)
+- Multiframe export for animations ***(experimental)*** (Press "F" to toggle) (seriously this will take a lot of memory on larger files)
+***You have been warned!***
+- Supports both Web Demo exports and Desktop app exports
+
+## Supported Shapes
+- Rectangle
+- Rotated Rectangle
+- Triangle
+- Ellipse
+- Rotated Ellipse
+- Circle
+- Line
+- Quadratic Bezier (is rendered as a polyline with 32 points)
+
 # How to use
 ## Windows
 - Download the latest release for Windows
