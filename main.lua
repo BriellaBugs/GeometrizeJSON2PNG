@@ -26,8 +26,13 @@ end
 
 function love.filedropped(file)
 	hasFile = true
+	local shapeTypeOffset = 0
 	local data = file:read()
 	local shapes = json.decode(data)
+	if shapes.shapes then
+		shapes = shapes["shapes"]
+		shapeTypeOffset = 1
+	end
 	local fileName = file:getFilename()
 	fileName = fileName:match("([^\\/]+)$").."_"..tostring(resolutionMult).."x_render"
 	
@@ -43,10 +48,11 @@ function love.filedropped(file)
 	love.graphics.push()
 	love.graphics.scale(resolutionMult,resolutionMult)
 		for _,shape in ipairs(shapes) do
+			
 			love.graphics.setColor(shape.color[1]/255,shape.color[2]/255,shape.color[3]/255,shape.color[4]/255)
-			if     shape.type == 0 then				--Rectangle
+			if     shape.type == 0+shapeTypeOffset then				--Rectangle
 				love.graphics.rectangle("fill",shape.data[1],shape.data[2],shape.data[3]-shape.data[1],shape.data[4]-shape.data[2])
-			elseif shape.type == 1 then				--Rotated Rectangle
+			elseif shape.type == 1+shapeTypeOffset then				--Rotated Rectangle
 				local x1,y1,x2,y2,angleDeg = unpack(shape.data)
 				local cx = (x1 + x2) / 2
 				local cy = (y1 + y2) / 2
@@ -58,21 +64,21 @@ function love.filedropped(file)
 				love.graphics.rotate(math.rad(angleDeg))
 				love.graphics.rectangle("fill", -w/2, -h/2, w, h)
 				love.graphics.pop()
-			elseif shape.type == 2 then				--Triangle
+			elseif shape.type == 2+shapeTypeOffset then				--Triangle
 				love.graphics.polygon("fill",shape.data)
-			elseif shape.type == 3 then				--Ellipse
+			elseif shape.type == 3+shapeTypeOffset then				--Ellipse
 				love.graphics.ellipse("fill",shape.data[1],shape.data[2],shape.data[3],shape.data[4])
-			elseif shape.type == 4 then				--Rotated Ellipse
+			elseif shape.type == 4+shapeTypeOffset then				--Rotated Ellipse
 				love.graphics.push()
 				love.graphics.translate(shape.data[1], shape.data[2])
 				love.graphics.rotate(math.rad(shape.data[5]))
 				love.graphics.ellipse("fill",0,0,shape.data[3],shape.data[4])
 				love.graphics.pop()
-			elseif shape.type == 5 then				--Circle
+			elseif shape.type == 5+shapeTypeOffset then				--Circle
 				love.graphics.circle("fill",shape.data[1],shape.data[2],shape.data[3])
-			elseif shape.type == 6 then				--Line
+			elseif shape.type == 6+shapeTypeOffset then				--Line
 				love.graphics.line(shape.data)
-			elseif shape.type == 7 then				--Quadratic Bezier
+			elseif shape.type == 7+shapeTypeOffset then				--Quadratic Bezier
 				local x1,y1,cx,cy,x2,y2 = unpack(shape.data)
 				local points = {}
 					local steps = 32 -- more steps = smoother curve
