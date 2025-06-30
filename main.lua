@@ -29,16 +29,15 @@ function love.filedropped(file)
 	local shapeTypeOffset = 0
 	local data = file:read()
 	local shapes = json.decode(data)
-	if shapes.shapes then
+	if shapes.shapes then --True if data is from the Desktop app, false if it's from the web app
 		shapes = shapes["shapes"]
-		shapeTypeOffset = 1
+		shapeTypeOffset = 1 --Shape type index on desktop starts at 1, on web starts at 0
 	end
 	local fileName = file:getFilename()
-	fileName = fileName:match("([^\\/]+)$").."_"..tostring(resolutionMult).."x_render"
+	fileName = fileName:match("([^\\/]+)$").."_"..tostring(resolutionMult).."x_render" --Remove dangerous characters that might make Love2D crash (illegal filename error)
 	
-	local width = shapes[1]["data"][3]*resolutionMult
+	local width = shapes[1]["data"][3]*resolutionMult --Get width and height from background shape (always a rectangle with the window size)
 	local height = shapes[1]["data"][4]*resolutionMult
-	--love.window.setMode(width,height)
 	drawingCanvas = love.graphics.newCanvas(width,height)
 	
 	love.graphics.setLineWidth(1)
