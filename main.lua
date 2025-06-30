@@ -101,6 +101,7 @@ function love.filedropped(file)
 				local img = drawingCanvas:newImageData()
 				img:encode("png", fileName..ishape..".png")
 				love.graphics.setCanvas(drawingCanvas)
+				print("Exporting frame "..ishape.."/"..#shapes)
 			end
 		end
 	love.graphics.pop()
