@@ -2,7 +2,7 @@ return {
 	name = 'Geometrize Renderer',
 	developer = 'BriellaBugs',
 	output = 'dist',
-	version = '1.0',
+	version = '1.1',
 	love = '11.5',
 	ignore = {},
 	icon = 'icon.png',
