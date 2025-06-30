@@ -2,6 +2,7 @@ function love.load()
 	json = require("dkjson")
 	drawingCanvas = love.graphics.newCanvas(200,200)
 	resolutionMult = 1
+	multiFrame = false
 end
 
 function love.update(dt)
@@ -14,10 +15,14 @@ function love.draw()
 		love.graphics.print("Please drop a .json file!",5,5)
 		love.graphics.print(resolutionMult.."x Resolution",5,5+spacing*1)
 		love.graphics.print("Scroll to change",300,5+spacing*1)
+		love.graphics.print("Multiframe: "..tostring(multiFrame),300,5+spacing*2)
+		love.graphics.print("Press F to toggle Multiframe",250,5+spacing*3)
 	else
 		love.graphics.print("Successfully exported at "..resultScale.." x Resolution",5,5)
 		love.graphics.print(resolutionMult.."x Resolution",5,5+spacing*1)
 		love.graphics.print("Scroll to change",300,5+spacing*1)
+		love.graphics.print("Multiframe: "..tostring(multiFrame),300,5+spacing*2)
+		love.graphics.print("Press F to toggle Multiframe",250,5+spacing*3)
 		love.graphics.print("Original Scale: "..(resultDimensions[1]/resultScale).." x "..(resultDimensions[2]/resultScale),5,5+spacing*2)
 		love.graphics.print("Scaled Resolution: "..resultDimensions[1].." x "..resultDimensions[2],5,5+spacing*3)
 		love.graphics.print(resultName,5,5+spacing*4)
@@ -29,14 +34,14 @@ function love.filedropped(file)
 	local shapeTypeOffset = 0
 	local data = file:read()
 	local shapes = json.decode(data)
-	if shapes.shapes then --True if data is from the Desktop app, false if it's from the web app
+	if shapes.shapes then
 		shapes = shapes["shapes"]
-		shapeTypeOffset = 1 --Shape type index on desktop starts at 1, on web starts at 0
+		shapeTypeOffset = 1
 	end
 	local fileName = file:getFilename()
-	fileName = fileName:match("([^\\/]+)$").."_"..tostring(resolutionMult).."x_render" --Remove dangerous characters that might make Love2D crash (illegal filename error)
+	fileName = fileName:match("([^\\/]+)$").."_"..tostring(resolutionMult).."x_render"
 	
-	local width = shapes[1]["data"][3]*resolutionMult --Get width and height from background shape (always a rectangle with the window size)
+	local width = shapes[1]["data"][3]*resolutionMult
 	local height = shapes[1]["data"][4]*resolutionMult
 	drawingCanvas = love.graphics.newCanvas(width,height)
 	
@@ -46,7 +51,7 @@ function love.filedropped(file)
 	love.graphics.rectangle("fill",0,0,width,height)
 	love.graphics.push()
 	love.graphics.scale(resolutionMult,resolutionMult)
-		for _,shape in ipairs(shapes) do
+		for ishape,shape in ipairs(shapes) do
 			
 			love.graphics.setColor(shape.color[1]/255,shape.color[2]/255,shape.color[3]/255,shape.color[4]/255)
 			if     shape.type == 0+shapeTypeOffset then				--Rectangle
@@ -90,13 +95,22 @@ function love.filedropped(file)
 					end
 					love.graphics.line(points)
 			end
+			
+			if multiFrame then
+				love.graphics.setCanvas()
+				local img = drawingCanvas:newImageData()
+				img:encode("png", fileName..ishape..".png")
+				love.graphics.setCanvas(drawingCanvas)
+			end
 		end
 	love.graphics.pop()
 	love.graphics.setCanvas()
 	love.graphics.setColor(1,1,1,1)
 	
-	local img = drawingCanvas:newImageData()
-	img:encode("png", fileName..".png")
+	if not multiFrame then
+		local img = drawingCanvas:newImageData()
+		img:encode("png", fileName..".png")
+	end
 	resultDimensions = {width,height}
 	resultName = fileName..".png"
 	resultScale = resolutionMult
@@ -106,4 +120,10 @@ end
 function love.wheelmoved( x, y )
 	resolutionMult = resolutionMult + y
 	resolutionMult = math.max(1,resolutionMult)
+end
+
+function love.keypressed(key, scancode, isrepeat)
+	if key == "f" then
+		multiFrame = not multiFrame
+	end
 end
