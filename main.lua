@@ -117,6 +117,11 @@ function love.filedropped(file)
 	resultDimensions = {width,height}
 	resultName = fileName..".png"
 	resultScale = resolutionMult
+	if love.system.getOS() == "Windows" then
+		local path = love.filesystem.getSaveDirectory()
+		os.execute('start "" "' .. path .. '"')
+	end
+
 	love.draw()
 end
 
