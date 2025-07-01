@@ -94,6 +94,8 @@ function love.filedropped(file)
 						table.insert(points, yt)
 					end
 					love.graphics.line(points)
+			elseif shape.type == 256 then							--Polyline (why 256??)
+				love.graphics.line(shape.data)
 			end
 			
 			if multiFrame then
