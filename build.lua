@@ -1,5 +1,5 @@
 return {
-	name = '',
+	name = 'Geometrize JSON2PNG',
 	developer = 'BriellaBugs',
 	output = 'dist',
 	version = '1.2.1',
