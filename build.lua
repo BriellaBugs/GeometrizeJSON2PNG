@@ -1,8 +1,8 @@
 return {
-	name = 'Geometrize Renderer',
+	name = '',
 	developer = 'BriellaBugs',
 	output = 'dist',
-	version = '1.2',
+	version = '1.2.1',
 	love = '11.5',
 	ignore = {},
 	icon = 'icon.png',
