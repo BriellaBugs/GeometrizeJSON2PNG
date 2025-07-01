@@ -17,7 +17,7 @@ Geometrize JSON to PNG converter made with LÖVE2D framework
 - Circle
 - Line
 - Quadratic Bezier (is rendered as a polyline with 32 points)
-- Polylines (v1.2.1+)
+- Polylines
 
 # How to use
 ## Windows
